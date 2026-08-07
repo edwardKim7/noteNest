@@ -1,0 +1,46 @@
+name: Security checks
+
+# 코드 자체의 위험한 패턴(bandit)과 의존성의 알려진 취약점(pip-audit)을
+# 매 push/PR 및 주 1회 스케줄에서 검사한다. 모두 오픈소스 도구라 비용은 없다.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # 매주 월요일 03:00 UTC (KST 12:00)에 정기 스캔
+    - cron: "0 3 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  bandit:
+    name: Static analysis (bandit)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install bandit
+      - name: Bandit scan
+        # -ll: LOW severity, LOW confidence 이상 리포트
+        # ui_template.py는 대용량 HTML 리터럴이라 false positive가 많아 제외
+        run: bandit -ll -r memo.py
+
+  pip-audit:
+    name: Dependency audit (pip-audit)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install pip-audit
+      - name: Audit runtime deps
+        run: pip-audit -r requirements.txt
+      - name: Audit dev deps
+        run: pip-audit -r requirements-dev.txt

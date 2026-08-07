@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+.pytest_cache/
+.venv/
+venv/
+
+# Build output
+build/
+dist/
+*.spec
+
+# Runtime files
+*.log
+*.tmp
+.simple_memo/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.lnk

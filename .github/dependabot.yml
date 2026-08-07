@@ -1,0 +1,24 @@
+# Dependabot으로 requirements.txt / requirements-dev.txt의 의존성 취약점을
+# 주간 단위로 자동 감시하고 PR로 알려준다. GitHub 기본 기능이라 비용은 없다.
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "security"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "ci"

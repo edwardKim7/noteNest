@@ -1,0 +1,2 @@
+pywebview
+cryptography>=41.0
